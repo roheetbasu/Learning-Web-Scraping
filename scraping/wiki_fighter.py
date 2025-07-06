@@ -1,6 +1,7 @@
 
 from parsel import Selector
 from requests import get
+import re
 
 def get_opponent_with_info(html):
     
@@ -51,17 +52,45 @@ def get_fighter_info(html):
         'Image' : f"https://en.wikipedia.org/{link}",
         'Nickname' : None,
         'Nationality' : None,
-        'Style' : None
+        'Style' : None,
+        'Height' : None,
+        'Weight' : None,
     }  
     for tr in trs[2:]:
         key : str = tr.xpath("./th//text()").get()
         value = tr.xpath("./td//text()").get()
         
-        if key == 'Nickname':
+        if key is None or value is None:
+            continue
+        if key.startswith('Nickname'):
             fighter_info['Nickname'] = value
-        elif key == 'Nationality':
+        elif key.startswith('Nationality'):
             fighter_info['Nationality'] = value
-        elif key == 'Style':
+        elif key.startswith('Style'):
             fighter_info['Style'] = value
+        elif key.startswith('Height'):
+            value = value.replace('\u00a0', ' ') 
+            pattern = r'(?P<imper>\d+\s*ft\s*\d+\s*in)\s*\(\s*(?P<metric>[\d.]+\s*c?m)\s*\)'
+            match = re.search(pattern, value)
+            if not match:
+                print(value)
+            if match:   
+                fighter_info['Height'] = {
+                    'Imperial' : match.group('imper'),
+                    'Metric' : match.group('metric')
+                }
+        elif key.startswith('Weight'):
+            value = value.replace('\u00a0', ' ') 
+            pattern = r'(?P<imper>\d+\s*lb)\s*\((?P<metric>\d+\s*kg);\s*(?P<stone>[\d.]+\s*st)(?:\s*\d+\s*lb)?\)'
+            match = re.search(pattern, value)
+            if not match:
+                print(value)
+            if match:   
+                fighter_info['Weight'] = {
+                    'Imperial' : match.group('imper'),
+                    'Metric' : match.group('metric'),
+                    'Stone': match.group('stone')
+                }
             
     return fighter_info
+
