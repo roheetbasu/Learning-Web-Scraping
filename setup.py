@@ -11,7 +11,8 @@ setup(
     install_requires=requirement,
     entry_points={
         'console_scripts': [
-            'wiki_scrape = scraping.main:default',
+            'wiki_scrape = scraping.wiki.main:default',
+            'shop_scrape = scraping.shop.main:default',
         ]
     }
 )

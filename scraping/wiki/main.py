@@ -11,7 +11,7 @@
 
 import requests
 import json
-from scraping.wiki_fighter import get_opponent,get_fighter_info,get_opponent_with_info
+from scraping.wiki.wiki_fighter import get_opponent,get_fighter_info,get_opponent_with_info
 import sys 
 
 def default():
