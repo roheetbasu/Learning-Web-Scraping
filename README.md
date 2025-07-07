@@ -1,0 +1,1 @@
+wiki_scrape ops+info https://en.wikipedia.org/wiki/Khabib_Nurmagomedov khabib_ops_info

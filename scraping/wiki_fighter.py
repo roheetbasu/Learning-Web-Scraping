@@ -55,6 +55,7 @@ def get_fighter_info(html):
         'Style' : None,
         'Height' : None,
         'Weight' : None,
+        'BirthDate' : None 
     }  
     for tr in trs[2:]:
         key : str = tr.xpath("./th//text()").get()
@@ -91,6 +92,11 @@ def get_fighter_info(html):
                     'Metric' : match.group('metric'),
                     'Stone': match.group('stone')
                 }
+        elif key.startswith('Born'):
+            date = tr.xpath(".//span[@class='bday']/text()").get()
+            if date:
+                fighter_info['BirthDate'] = date
+            
             
     return fighter_info
 
